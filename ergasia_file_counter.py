@@ -1,3 +1,9 @@
+import sys
+sys.path.append('..')
+import file_walk as fw
+import re
+import os
+import termcolor as tm
 def file_parser():
     print(os.getcwd())
     allfiles = []
@@ -31,6 +37,29 @@ def filesbycategory():
         print(str(key) + '-->' + str(counter[key]))
     endtime = time()
     print('Lapsed Time:' + str(endtime - starttime) + ' s')
+
+def symbols_letters_digid():
+    parser={'characters':0,'digits':0,'symbols':0}
+    patternC=re.compile('[A-Za-z]')
+    patternD=re.compile('\d')
+    if len(files)==0:
+        print('no input data!!!')
+        return
+    start_time=time()
+    for x in files:
+        with open(x,'r',encoding="utf-8",errors='ignore') as f:
+            for k in f:
+                chars = len(patternC.findall(k))
+                digits = len(patternD.findall(k))
+                parser['characters']+=chars
+                parser['digits'] += digits
+                parser['symbols'] +=len(k)-(chars+digits)
+    end_time=time()
+    for x in parser:
+        tm.cprint(f'{x}-->{parser[x]}','green')
+    tm.cprint('=='*30,'red')
+    tm.cprint(f'lapsed time:{end_time-start_time} \ 's','red')
+symbols_letters_digid()
 
 starttime=time()
     linecounter=0
@@ -67,12 +96,7 @@ def equality_statements():
         id+=1
     print('\n\n')
     return len(fls)
-import sys
-sys.path.append('..')
-import file_walk as fw
-import re
-import os
-import termcolor as tm
+
 
 #Χρήση custom module file_walk:[https://github.com/vasnastos/Assignment_AGP/blob/master/file_walk.py]
 #Απαραίτητος ο φάκελος oop-master
@@ -138,3 +162,4 @@ def tester1():
 over_12_characters()
 #tester()
 #tester1()
+#!!!
