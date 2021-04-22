@@ -1,31 +1,28 @@
 import sys
 sys.path.append('..')
-import file_walk as fw
+
 import re
 import os
 
 from time import time
+masterpath="C:/Users/nikde/Documents/oop-master"
 
-
-def file_parser():
-    print(os.getcwd())
-    allfiles = []
-
-
-try:
-    for path, _, file in os.walk(top=parentroot, topdown=True):
-        allfiles += [path + '/' + l for l in file if
-                     l.endswith('.cpp') or l.endswith('.c') or l.endswith('.hpp') or l.endswith('.h')]
-except:
-    print('Can not open folder oop-master')
-    return list([])
-return allfiles
+def print_Dirs(masterpath):
+    global pathfiles
+    global files
+    files = os.listdir(masterpath)
+    for x in files:
+        if os.path.isdir(masterpath + '/' + x):
+            print_Dirs(masterpath + '/' + x)
+        else:
+            pathfiles.append(masterpath + '//' + x)
 
 #1!!!!!!!!!!!!!!!!!!!!!!!!!
 def filesbycategory():
 
     counter = {'cpp': 0, 'hpp': 0, 'h': 0, 'c': 0}
     starttime = time()
+
     for x in files:
         if re.match('.+\.cpp$', x):
             # if x.endswith('.cpp'):
@@ -43,7 +40,8 @@ def filesbycategory():
     print('Lapsed Time:' + str(endtime - starttime) + ' s')
 
 #2!!!!!!!!!!!!!!!!!!!!!!!!!!
-starttime=time()
+def alllines_function():
+    starttime=time()
     linecounter=0
     for i in files:
         with open(i,'r',encoding="utf-8",errors='ignore') as f:
@@ -51,7 +49,9 @@ starttime=time()
                 if len(j.strip())!=0:
                     linecounter+=1
     print('Lines of code:'+str(linecounter))
-    print('Elapsed Time for finding all lines of code:'+str(time()-starttime)+'\'s')
+
+    print('Elapsed Time for finding all lines of code:'+ str(time()-starttime) + ' s')
+alllines_function()
 
 #3!!!!!!!!!!!!!!!!!!!!!!!
 def symbols_letters_digid():
@@ -74,7 +74,7 @@ def symbols_letters_digid():
     for x in parser:
         print(f'{x}-->{parser[x]}')
     print('=='*30)
-    print(f'lapsed time:{end_time-start_time} \ 's')
+    print('lapsed time:'  +str(end_time-start_time) + 's' )
 symbols_letters_digid()
 
 #4!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -101,7 +101,7 @@ symbols_letters_digid()
         for k in fls:
             k = k.replace(' ', '').replace('\t', '')
             # k=k.strip()
-            tm.cprint(str(id) + '.' + str(k), 'green')
+            print(str(id) + '.' + str(k))
             id += 1
         print('\n\n')
         return len(fls)
@@ -116,10 +116,10 @@ def over_12_characters():
         with open(x,'r',encoding='ISO-8859-1') as f:
            for k in f:
                for l in pattern.findall(k):
-                   tm.cprint(l,'red')
+                   print(l)
                    current=l[int(l.find('('))+1:len(l)-1]
                    if len(current.replace(' ',''))>=12:
-                         tm.cprint(current,'green')
+                         print(current)
                          found+=1
                    print('')
     print(f'for loops with over 12 characters:{found}')
