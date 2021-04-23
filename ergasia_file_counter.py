@@ -83,8 +83,7 @@ def equality_statements():
     fls=[]
     pattern=re.compile('\s+if\s*\(\s*.+\s*==\s*.+\)|^if\s*\(.+==.+\)|.*if\s*\(\s*\w+\s*\)')
     patternB=re.compile("\s*if\s*\(\s*\w+\s*\)")
-    #|if\s*\(\s*(\w|\d)+\s*\)
-    #if\s*\(\s*(\w|\d)+\s*\)-->if(k) αν k είναι boolean μεταβλητή η ένας αριθμός
+    start_time = time()
     for x in files:
         with open(x,'r',encoding='utf-8',errors='ignore') as f:
             #counter+=len([m for m in f if(r.match('.*if(.+==.+).*',m))])
@@ -93,7 +92,7 @@ def equality_statements():
                 fls+=pattern.findall(k)
                 fls+=patternB.findall(k)
     print('\t If equality Statements found')
-    print('==='*30,'red')
+    print('==='*30)
     id=1
     for k in fls:
         k=k.replace(' ','').replace('\t','')
@@ -101,6 +100,7 @@ def equality_statements():
         print(str(id)+'.'+str(k))
         id+=1
     print('\n\n')
+    print('lapsed time:' + str(time() - start_time) + 's')
     return len(fls)
 equality_statements()
 
@@ -110,6 +110,7 @@ def over_12_characters():
     print(len(files))
     #for regex
     pattern=re.compile('\s*for\s*\(\s*.*\s*;\s*.*\s*;\s*.*\s*\)|\s*for\s*\(\s*.+[:]\s*.+\s*\)')
+    start_time = time()
     for x in files:
         with open(x,'r',encoding='ISO-8859-1') as f:
            for k in f:
@@ -121,19 +122,15 @@ def over_12_characters():
                          found+=1
                    print('')
     print(f'for loops with over 12 characters:{found}')
+    print('lapsed time:' + str(time() - start_time) + 's')
 over_12_characters()
 #6!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 def commonvars():
     vars = {}
-    # Τρια Μοτίβα μεταβλητών
-    # int a;-->int\s+\w+;
-    # int a=10;-->int\s+\w+\s*([=]\s*\w+\s*)+;
-    # int a,b,c;-->int\s+\w+\s*([,]\s*\w+\s*)*;
-    # Μη αποδεκτό-->const int a=10;
 
-    # (int\s+\w+\s*([,]\s*\w+\s*)*[;]|\s*int\s+\w+\s*([=]\s*\w+\s*)+[;])
     patternf = re.compile('(int\s+\w+\s*([,]\s*\w+\s*)*[;]|\s*int\s+\w+\s*([=]\s*\w+\s*)+[;])')
     constpattern = re.compile('(const\s+int\s*\w+\s*([=]\s*\w+\s*)+[;])')
+    start_time = time()
     for x in files:
         with open(x, 'r', encoding='utf-8', errors='ignore') as L:
             for k in L:
@@ -142,4 +139,5 @@ def commonvars():
                     cleanconst = k.replace(l[0], '')
                 for t in patternf.findall(cleanconst):
                     print('Variable:' + str(t))
+    print('lapsed time:' + str(time() - start_time) + 's')
 commonvars()
