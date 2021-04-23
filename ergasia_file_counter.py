@@ -127,7 +127,8 @@ over_12_characters()
 #6!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 def commonvars():
     vars = {}
-
+    count, itm = 0, ''
+    sum=0
     patternf = re.compile('(int\s+\w+\s*([,]\s*\w+\s*)*[;]|\s*int\s+\w+\s*([=]\s*\w+\s*)+[;])')
     constpattern = re.compile('(const\s+int\s*\w+\s*([=]\s*\w+\s*)+[;])')
     start_time = time()
@@ -138,6 +139,11 @@ def commonvars():
                 for l in constpattern.findall(k):
                     cleanconst = k.replace(l[0], '')
                 for t in patternf.findall(cleanconst):
-                    print('Variable:' + str(t))
+                    vars[t]=vars.get(t,0)+1
+                    if vars[t] >= count:
+                        count,itm =vars[t],t
+                        sum=sum+1
+    print('Most common integer variables are:')
+    print(itm, "-->", sum-1 )
     print('lapsed time:' + str(time() - start_time) + 's')
 commonvars()
