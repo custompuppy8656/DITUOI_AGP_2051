@@ -1,22 +1,20 @@
-import sys
-sys.path.append('..')
 
 import re
 import os
 
 from time import time
-masterpath="C:/Users/nikde/Documents/oop-master"
+start_directory = "C:/Users/nikde/Documents/oop-master"
 
-def print_Dirs(masterpath):
-    global pathfiles
-    global files
-    files = os.listdir(masterpath)
-    for x in files:
-        if os.path.isdir(masterpath + '/' + x):
-            print_Dirs(masterpath + '/' + x)
-        else:
-            pathfiles.append(masterpath + '//' + x)
+files = []
+try:
+   for path, _, file in os.walk(start_directory, topdown=False):
 
+       files += [path + '/' + l for l in file if
+       l.endswith('.cpp') or l.endswith('.c') or l.endswith('.hpp') or l.endswith('.h')]
+except:
+    print('Can not open folder oop-master')
+    print(list([]))
+print(files)
 #1!!!!!!!!!!!!!!!!!!!!!!!!!
 def filesbycategory():
 
@@ -24,8 +22,7 @@ def filesbycategory():
     starttime = time()
 
     for x in files:
-        if re.match('.+\.cpp$', x):
-            # if x.endswith('.cpp'):
+        if x.endswith('.cpp'):
             counter['cpp'] += 1
         elif x.endswith('.hpp'):
             counter['hpp'] += 1
@@ -38,6 +35,7 @@ def filesbycategory():
         print(str(key) + '-->' + str(counter[key]))
     endtime = time()
     print('Lapsed Time:' + str(endtime - starttime) + ' s')
+filesbycategory()
 
 #2!!!!!!!!!!!!!!!!!!!!!!!!!!
 def alllines_function():
@@ -50,7 +48,7 @@ def alllines_function():
                     linecounter+=1
     print('Lines of code:'+str(linecounter))
 
-    print('Elapsed Time for finding all lines of code:'+ str(time()-starttime) + ' s')
+    print('Elapsed Time for finding all lines of code:' + str(time()-starttime) + ' s')
 alllines_function()
 
 #3!!!!!!!!!!!!!!!!!!!!!!!
@@ -79,32 +77,32 @@ symbols_letters_digid()
 
 #4!!!!!!!!!!!!!!!!!!!!!!!!!
 
-    def equality_statements():
-        def equality_statements():
-            counter = 0
+def equality_statements():
 
-        fls = []
-        pattern = re.compile('\s+if\s*\(\s*.+\s*==\s*.+\)|^if\s*\(.+==.+\)|.*if\s*\(\s*\w+\s*\)')
-        patternB = re.compile("\s*if\s*\(\s*\w+\s*\)")
-        # |if\s*\(\s*(\w|\d)+\s*\)
-        # if\s*\(\s*(\w|\d)+\s*\)-->if(k) αν k είναι boolean μεταβλητή η ένας αριθμός
-        for x in files:
-            with open(x, 'r', encoding='utf-8', errors='ignore') as f:
-                # counter+=len([m for m in f if(r.match('.*if(.+==.+).*',m))])
-                for k in f:
-                    print(patternB.findall(k))
-                    fls += pattern.findall(k)
-                    fls += patternB.findall(k)
-        print('\t If equality Statements found')
-        print('===' * 30)
-        id = 1
-        for k in fls:
-            k = k.replace(' ', '').replace('\t', '')
-            # k=k.strip()
-            print(str(id) + '.' + str(k))
-            id += 1
-        print('\n\n')
-        return len(fls)
+    counter=0
+    fls=[]
+    pattern=re.compile('\s+if\s*\(\s*.+\s*==\s*.+\)|^if\s*\(.+==.+\)|.*if\s*\(\s*\w+\s*\)')
+    patternB=re.compile("\s*if\s*\(\s*\w+\s*\)")
+    #|if\s*\(\s*(\w|\d)+\s*\)
+    #if\s*\(\s*(\w|\d)+\s*\)-->if(k) αν k είναι boolean μεταβλητή η ένας αριθμός
+    for x in files:
+        with open(x,'r',encoding='utf-8',errors='ignore') as f:
+            #counter+=len([m for m in f if(r.match('.*if(.+==.+).*',m))])
+            for k in f:
+                print(patternB.findall(k))
+                fls+=pattern.findall(k)
+                fls+=patternB.findall(k)
+    print('\t If equality Statements found')
+    print('==='*30,'red')
+    id=1
+    for k in fls:
+        k=k.replace(' ','').replace('\t','')
+        #k=k.strip()
+        print(str(id)+'.'+str(k))
+        id+=1
+    print('\n\n')
+    return len(fls)
+equality_statements()
 
 #5!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 def over_12_characters():
@@ -123,7 +121,7 @@ def over_12_characters():
                          found+=1
                    print('')
     print(f'for loops with over 12 characters:{found}')
-
+over_12_characters()
 #6!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 def commonvars():
     vars = {}
@@ -144,4 +142,4 @@ def commonvars():
                     cleanconst = k.replace(l[0], '')
                 for t in patternf.findall(cleanconst):
                     print('Variable:' + str(t))
-
+commonvars()
