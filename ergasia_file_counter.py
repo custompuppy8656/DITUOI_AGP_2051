@@ -125,24 +125,75 @@ def over_12_characters():
 over_12_characters()
 #6!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 def commonvars():
-    vars = {}
-    count, itm = 0, ''
-    sum=0
-    patternf = re.compile('(int\s+\w+\s*([,]\s*\w+\s*)*[;]|\s*int\s+\w+\s*([=]\s*\w+\s*)+[;])')
-    constpattern = re.compile('(const\s+int\s*\w+\s*([=]\s*\w+\s*)+[;])')
+    commonvars = dict({})
+    # Pattern for variables
+    unacceptable = re.compile('((const|static|static\sconst)\s+int\s+\w+\s*[=]\s*\w+\s*[;])')
+    pattern = re.compile('\s*int\s+\w+[;]')
+    patternA = re.compile('(\s*int\s+\w+([,]\w+)*[;])')
+    patternB = re.compile('(\s*int\s+\w+([=]\w+)+[;])')
+    patternC = re.compile('(\s*int\s+\w+\s*[=]\s*\w+\s*([,]\s*\w+\s*[=]\s*\w+\s*)+[;])')
+
+    matches = []
     start_time = time()
     for x in files:
-        with open(x, 'r', encoding='utf-8', errors='ignore') as L:
-            for k in L:
-                cleanconst = k
-                for l in constpattern.findall(k):
-                    cleanconst = k.replace(l[0], '')
-                for t in patternf.findall(cleanconst):
-                    vars[t]=vars.get(t,0)+1
-                    if vars[t] >= count:
-                        count,itm =vars[t],t
-                        sum=sum+1
-    print('Most common integer variables are:')
-    print(itm, "-->", sum-1 )
+        with open(x, 'r', encoding='utf8', errors='ignore') as f:
+            lines = f.readlines()
+            for k in lines:
+                word = k
+                if word.startswith('//') or word.startswith('#'):
+                    continue
+
+                for l in unacceptable.finditer(k):
+                    word = k[0:l.start()] + k[l.end():]
+
+                for n1 in pattern.findall(word):
+                    if len(n1) == 0: continue
+                    word = n1.replace(';', '').strip()
+                    spdat = re.split('\s', word)
+                    if spdat[1] in commonvars:
+                        commonvars[spdat[1]] += 1
+                    else:
+                        commonvars.update({spdat[1]: 1})
+                for n2 in [l[0] for l in patternA.findall(word)]:
+                    word = n2.replace(';', ' ').strip()
+                    data2 = re.split('[,\s]', word)
+                    for j in data2:
+                        if j.strip() == 'int':
+                            continue
+                        if j.strip() in commonvars:
+                            commonvars[j.strip()] += 1
+                        else:
+                            commonvars.update({j.strip(): 1})
+                for n3 in [l[0] for l in patternB.findall(word)]:
+                    word = n3.strip().replace(';', '')
+                    data3 = [x for x in re.split('[\s=]', word) if x.strip() != ';' and re.search('^\s+$', x) == None]
+                    counter = 0
+                    for j in data3:
+                        counter += 1
+                        if len(data3) == int(counter):
+                            continue
+                        if j.strip() == 'int':
+                            continue
+                        if j.strip() in commonvars:
+                            commonvars[j.strip()] += 1
+                        else:
+                            commonvars.update({j.strip(): 1})
+
+                for n4 in [l[0] for l in patternC.findall(k)]:
+                    word = n4.strip().replace(';', '')
+
+                    data4 = [x.replace(' ', '') for x in word.split(',')]
+                    for j in data4:
+                        checkstr1 = word.split('=')[0]
+                        checkstr = checkstr1.split(' ')[1]
+                        if checkstr in commonvars:
+                            commonvars[checkstr] += 1
+                        else:
+                            commonvars.update({checkstr: 1})
+
+    tops = sorted(commonvars.items(), key=lambda elem: elem[1])
+    # print(commonvars['j'])
+    for i in range(len(tops) - 1, len(tops) - 4, -1):
+        print(f'{tops[i][0]}-->{tops[i][1]}')
     print('lapsed time:' + str(time() - start_time) + 's')
 commonvars()
