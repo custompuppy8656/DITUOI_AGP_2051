@@ -81,16 +81,15 @@ def equality_statements():
 
     counter=0
     fls=[]
-    pattern=re.compile('\s+if\s*\(\s*.+\s*==\s*.+\)|^if\s*\(.+==.+\)|.*if\s*\(\s*\w+\s*\)')
-    patternB=re.compile("\s*if\s*\(\s*\w+\s*\)")
+    pattern=re.compile('\s+if\s*\(\s*.+\s*==\s*.+\)|^if\s*\(.+==.+\)|.*if\s*\(\s*\w+\s*\)|\s*if\s*\(\s*\w+\s*\)')
+
     start_time = time()
     for x in files:
         with open(x,'r',encoding='utf-8',errors='ignore') as f:
             #counter+=len([m for m in f if(r.match('.*if(.+==.+).*',m))])
             for k in f:
-                print(patternB.findall(k))
+                print(pattern.findall(k))
                 fls+=pattern.findall(k)
-                fls+=patternB.findall(k)
     print('\t If equality Statements found')
     print('==='*30)
     id=1
