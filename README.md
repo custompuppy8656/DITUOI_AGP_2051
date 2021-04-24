@@ -2,7 +2,7 @@
 
 ΟΝΟΜΑ :ΝΙΚΟΛΑΟΣ ΣΑΡΡΗΣ 
 ΑΜ:2051
-LINK κώδικα:
+LINK κώδικα:https://github.com/custompuppy8656/DITUOI_AGP_2051/blob/master/ergasia_file_counter.py
 
 Στο πρόγραμμα υπάρχει μια string μεταβλητή που παίρνει τη τιμή του path που αποθηκεύσαμε το oop-master . 
 Στη συνέχεια διασχίζει το oop-master και εμφανίζει τα παρακάτω αποτελέσματα καθώς και το χρόνο εκτέλεσης τους. 
